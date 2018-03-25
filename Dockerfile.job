@@ -1,0 +1,23 @@
+FROM ubuntu:16.04
+
+RUN sed -i 's/deb.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/sources.list
+
+RUN apt-get update \
+    && mkdir /home/job \
+    && apt-get install -y python3 \
+    && apt-get install -y python3-pip \
+    && pip3 install --upgrade pip
+
+WORKDIR /home/job
+
+EXPOSE 80 8000
+
+COPY job/ /home/job/job
+
+COPY requirements.txt /home/job
+
+RUN pip3 install -r requirements.txt
+
+COPY run.py /home/job/job
+
+COPY scrapy.cfg /home/job
