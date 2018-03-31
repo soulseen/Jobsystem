@@ -20,7 +20,6 @@ class test(scrapy.Spider):
         item = JobItem()
         pattern = re.compile(r'<title>(.*?)</title>')
         name = pattern.search(response.body.decode('utf-8'))
-
         item["name"] = str(name.groups(0))
         # item['name'] = "爱上".encode('utf-8')
 

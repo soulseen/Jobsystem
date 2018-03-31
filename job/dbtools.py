@@ -69,11 +69,11 @@ class DatabaseAgent():
         session.commit()
         return new_orm
 
-# def create_db():
-#     engine = create_engine(DATABASE_URL)
-#     Base.metadata.create_all(engine)
-#
-#
-# def drop_db():
-#     engine = create_engine(DATABASE_URL)
-#     Base.metadata.drop_all(engine)
+def create_db():
+    engine = create_engine(DATABASE_URL)
+    Base.metadata.create_all(engine)
+
+
+def drop_db():
+    engine = create_engine(DATABASE_URL)
+    Base.metadata.drop_all(engine)
