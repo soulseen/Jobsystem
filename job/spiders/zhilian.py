@@ -7,7 +7,7 @@ import re
 
 
 class test(scrapy.Spider):
-    name = 'test'
+    name = 'zhilian_python'
     zhilian = "http://sou.zhaopin.com/jobs/searchresult.ashx?jl={city}&kw={name}&sm=0&sg=897d9246117644c0b19afbf08e729ca7&p={page}"
     header = {"User-Agent": 'Mozilla/5.0 (X11; Linux x86_64) AppleWe'
                             'bKit/537.36(KHTML, like Gecko) Chrome/6'
@@ -46,19 +46,14 @@ class test(scrapy.Spider):
 
     def parse(self,response):
         jobitem = JobItem()
-        db_agent = DatabaseAgent()
-        url = {"url":response.url}
-        db_agent.add(
-
-        )
+        jobitem["url"] = response.url
+        jobitem["origin"] = 'zhilian'
         jobitem["job_name"] = response.xpath('//div[@class="inner-left fl"]/h1/text()').extract()[0]
         jobitem["com_name"] = response.xpath('//div[@class="inner-left fl"]/h2/a/text()').extract()[0]
         information = response.xpath('//div[@class="terminalpage-left"]/ul/li/strong/text()').extract()
         jobitem["money"] = information[0]
-        jobitem["all_day"] = information[1]
+        jobitem["naturl"] = information[1]
         jobitem["exp"] = information[2]
         jobitem["education"] = information[3]
-
-
-
-        #return jobitem
+        jobitem["time"] = response.xpath('//div[@class="terminalpage-left"]/ul/li/strong/span/text()').extract()[0]
+        return jobitem
