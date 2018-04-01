@@ -46,5 +46,6 @@ class test(scrapy.Spider):
             )
 
     def parse(self,response):
-        with open('/Users/zhuxiaoyang/zxy/project/Jobsystem/job/export.txt','a') as f:
-            f.write(str(response.url)+'\n')
+        print(response.url)
+        # with open('/Users/zhuxiaoyang/zxy/project/Jobsystem/job/export.txt','a') as f:
+        #     f.write(str(response.url)+'\n')
