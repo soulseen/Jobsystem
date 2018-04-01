@@ -4,7 +4,7 @@ from .base import Base
 from sqlalchemy import Column, String, Integer,ForeignKey
 
 
-class Job(Base):
+class Python(Base):
     __tablename__ = "python"
 
     id = Column(Integer, autoincrement=True, primary_key=True)
