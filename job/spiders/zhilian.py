@@ -1,27 +1,52 @@
 # -*- coding: utf-8 -*-
 
+from job.items import JobItem
 import scrapy
 import re
-from job.items import JobItem
+import requests
 
 
 class test(scrapy.Spider):
     name = 'test'
-    # start_urls = ['https://www.liaoxuefeng.com/']
-
+    zhilian = "http://sou.zhaopin.com/jobs/searchresult.ashx?jl={city}&kw={name}&sm=0&sg=897d9246117644c0b19afbf08e729ca7&p={page}"
+    header = {"User-Agent": 'Mozilla/5.0 (X11; Linux x86_64) AppleWe'
+                            'bKit/537.36(KHTML, like Gecko) Chrome/6'
+                            '3.0.3239.132 Safari/537.36'}
+    data = {
+        "city": "上海",
+        "name": "python工程师"
+    }
 
     def start_requests(self):
         yield scrapy.Request(
-            url='https://www.liaoxuefeng.com/',
-            callback=self.parse
+            url=self.zhilian.format(**self.data, page="1"),
+            headers=self.header,
+            callback=self.get_page
         )
 
-    def parse(self, response):
-        item = JobItem()
-        pattern = re.compile(r'<title>(.*?)</title>')
+    def get_page(self, response):
+        self.get_url(response)
+        pattern = re.compile(r'共<em>(\d+)</em>个职位满足条件')
         name = pattern.search(response.body.decode('utf-8'))
-        item["name"] = str(name.groups(0))
-        # item['name'] = "爱上".encode('utf-8')
+        pages = int(int(name.group(1)) / 60) + 2
+        for page in range(2,pages):
+            yield scrapy.Request(
+                url=self.zhilian.format(**self.data,page=page),
+                headers=self.header,
+                callback=self.get_url
+            )
 
-        print(item)
-        yield item
+    def get_url(self, response):
+        job_urls = response.xpath('//a[@par]/@href').extract()
+        for job_url in job_urls:
+            yield scrapy.Request(
+                url=job_url,
+                headers=self.header,
+                callback=self.parse
+            )
+
+    def parse(self,response):
+        print(response.url)
+        print('---------')
+        with open('/Users/zhuxiaoyang/zxy/project/Jobsystem/job/export.test','wa') as f:
+            f.write(str(response.url))
