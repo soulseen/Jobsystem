@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from .base import Base
-from sqlalchemy import Column, String, Integer
+from sqlalchemy import Column, String, Integer,ForeignKey
 
 
 class Job(Base):
-    __tablename__ = "job"
+    __tablename__ = "python"
 
     id = Column(Integer, autoincrement=True, primary_key=True)
     jobname = Column(String(255), nullable=False)
@@ -16,3 +16,5 @@ class Job(Base):
     exp = Column(String(255))
     education = Column(String(255))
     time = Column(String(255))
+    com_id = Column(Integer,ForeignKey('caompany.id'))
+
