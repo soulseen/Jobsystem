@@ -1,5 +1,7 @@
 __pycache__\
 *.pyc
 export.*
+docker-compose.yml
+export/*
 
 

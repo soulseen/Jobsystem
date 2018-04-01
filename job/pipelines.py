@@ -15,10 +15,10 @@ class JobPipeline(object):
         self.db_agent = DatabaseAgent()
 
     def process_item(self, item, spider):
-        db = self.db_agent.add(
-            kwargs=dict(item),
-            orm_model=Job
-        )
+        # db = self.db_agent.add(
+        #     kwargs=dict(item),
+        #     orm_model=Job
+        # )
         return item
 
 

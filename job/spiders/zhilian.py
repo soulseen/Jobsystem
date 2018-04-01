@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from job.items import JobItem
+from job.dbtools import DatabaseAgent
 import scrapy
 import re
-import requests
 
 
 class test(scrapy.Spider):
@@ -25,7 +25,6 @@ class test(scrapy.Spider):
         )
 
     def get_page(self, response):
-        # yield self.get_url(response)
         pattern = re.compile(r'共<em>(\d+)</em>个职位满足条件')
         name = pattern.search(response.body.decode('utf-8'))
         pages = int(int(name.group(1)) / 60) + 2
@@ -46,6 +45,20 @@ class test(scrapy.Spider):
             )
 
     def parse(self,response):
-        print(response.url)
-        # with open('/Users/zhuxiaoyang/zxy/project/Jobsystem/job/export.txt','a') as f:
-        #     f.write(str(response.url)+'\n')
+        jobitem = JobItem()
+        db_agent = DatabaseAgent()
+        url = {"url":response.url}
+        db_agent.add(
+
+        )
+        jobitem["job_name"] = response.xpath('//div[@class="inner-left fl"]/h1/text()').extract()[0]
+        jobitem["com_name"] = response.xpath('//div[@class="inner-left fl"]/h2/a/text()').extract()[0]
+        information = response.xpath('//div[@class="terminalpage-left"]/ul/li/strong/text()').extract()
+        jobitem["money"] = information[0]
+        jobitem["all_day"] = information[1]
+        jobitem["exp"] = information[2]
+        jobitem["education"] = information[3]
+
+
+
+        #return jobitem
