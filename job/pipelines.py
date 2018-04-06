@@ -19,5 +19,4 @@ class JobPipeline(object):
             kwargs=dict(item),
             orm_model=Python
         )
-        print('-------')
         return item

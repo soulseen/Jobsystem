@@ -13,4 +13,8 @@ class Company(Base):
     natural = Column(String(45))
     scale = Column(String(45))
     address = Column(String(255))
-    job = relationship('python', backref='company')
+    python = relationship(
+        'Python',
+        #primaryjoin="Company.id==Python.com_id",
+        backref='company'
+    )

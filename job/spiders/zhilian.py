@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from job.items import JobItem #CompanyItem
+from job.items import JobItem, CompanyItem
 from job.dbtools import DatabaseAgent
 from job.models.company import Company
 import scrapy
@@ -48,7 +48,7 @@ class test(scrapy.Spider):
     def parse(self, response):
         db_agent = DatabaseAgent()
         jobitem = JobItem()
-        #companyItem = CompanyItem()
+        companyitem = CompanyItem()
         jobitem["url"] = response.url
         jobitem["origin"] = 'zhilian'
         jobitem["jobname"] = response.xpath('//div[@class="inner-left fl"]/h1/text()').extract()[0]
@@ -64,15 +64,15 @@ class test(scrapy.Spider):
         # company_information = response.xpath('//ul[@class="terminal-ul clearfix terminal-company mt20"]/li/strong/text()').extract()
         # for x in company_information:
         #     print(x)
-        jobitem["com_name"] = 'a'
-        jobitem["com_url"] = "b"
-        jobitem["com_natural"] = "c"
-        jobitem["scale"] = "d"
-        jobitem["address"] = "e"
+        # companyitem["com_name"] = 'a'
+        # companyitem["url"] = "b"
+        # companyitem["natural"] = "c"
+        # companyitem["scale"] = "d"
+        # companyitem["address"] = "e"
         # com = db_agent.add(
         #     orm_model=Company,
         #     kwargs=dict(companyItem)
         # )
-        # jobitem["com_id"] = com.id
+        jobitem["com_id"] = "1"
 
         yield jobitem

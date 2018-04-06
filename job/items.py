@@ -17,8 +17,11 @@ class JobItem(scrapy.Item):
     exp = scrapy.Field()
     education = scrapy.Field()
     time = scrapy.Field()
+    com_id = scrapy.Field()
+
+class CompanyItem(scrapy.Item):
     com_name = scrapy.Field()
-    com_url = scrapy.Field()
-    com_natural = scrapy.Field()
+    url = scrapy.Field()
+    natural = scrapy.Field()
     scale = scrapy.Field()
     address = scrapy.Field()

@@ -16,5 +16,6 @@ class Python(Base):
     exp = Column(String(255))
     education = Column(String(255))
     time = Column(String(255))
-    com_id = Column(Integer,ForeignKey('caompany.id'))
+    city = Column(String(255))
+    com_id = Column(Integer,ForeignKey('company.id'))
 

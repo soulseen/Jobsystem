@@ -1,5 +1,0 @@
-ALTER TABLE `db`.`python`
-CHANGE COLUMN `url` `url` VARCHAR(255) NOT NULL ,
-CHANGE COLUMN `origin` `origin` VARCHAR(45) NOT NULL ,
-CHANGE COLUMN `exp` `exp` VARCHAR(255) NULL ,
-CHANGE COLUMN `education` `education` VARCHAR(45) NOT NULL ;

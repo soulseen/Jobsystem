@@ -5,6 +5,6 @@ import sys
 import os
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-# print(os.path.dirname(os.path.abspath(__file__)))
-execute(['scrapy', 'crawl', 'zhilian_python','-o','./export/items.json'])
+#execute(['scrapy', 'crawl', 'zhilian_python','-o','./export/items.json'])
+execute(['scrapy', 'crawl', 'zhilian_python'])
 
