@@ -15,6 +15,6 @@ class Company(Base):
     address = Column(String(255))
     python = relationship(
         'Python',
-        #primaryjoin="Company.id==Python.com_id",
+        primaryjoin="Company.id==Python.com_id",
         backref='company'
     )

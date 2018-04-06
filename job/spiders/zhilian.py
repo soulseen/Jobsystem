@@ -3,6 +3,7 @@
 from job.items import JobItem, CompanyItem
 from job.dbtools import DatabaseAgent
 from job.models.company import Company
+from job.common import CommonFun
 import scrapy
 import re
 
@@ -49,30 +50,44 @@ class test(scrapy.Spider):
         db_agent = DatabaseAgent()
         jobitem = JobItem()
         companyitem = CompanyItem()
+        jobitem["city"] = self.data.get("city")
         jobitem["url"] = response.url
         jobitem["origin"] = 'zhilian'
         jobitem["jobname"] = response.xpath('//div[@class="inner-left fl"]/h1/text()').extract()[0]
         job_information = response.xpath('//div[@class="terminalpage-left"]/ul/li/strong/text()').extract()
         jobitem["money"] = job_information[0]
-        jobitem["natural"] = job_information[1]
-        jobitem["exp"] = job_information[2]
-        jobitem["education"] = job_information[3]
+        if '-' in job_information[1]:
+            num = 1
+        else:
+            num = 0
+        jobitem["natural"] = job_information[num + 1]
+        jobitem["exp"] = job_information[num + 2]
+        jobitem["education"] = job_information[num + 3]
         jobitem["time"] = response.xpath('//div[@class="terminalpage-left"]/ul/li/strong/span/text()').extract()[0]
+        des_lis = response.xpath(
+            '//div[@class="tab-cont-box"][1]/div[@class="tab-inner-cont"]/p/text()').extract()
+        description = ''
+        for des in des_lis:
+            description = description + des
+        jobitem["description"] = CommonFun.clear(description)
 
-        # CompanyItem["url"] = response.xpath('//div[@class="inner-left fl"]/h2/a/@href').extract()
-        # CompanyItem["com_name"] = response.xpath('//div[@class="inner-left fl"]/h2/a/text()').extract()[0]
-        # company_information = response.xpath('//ul[@class="terminal-ul clearfix terminal-company mt20"]/li/strong/text()').extract()
-        # for x in company_information:
-        #     print(x)
-        # companyitem["com_name"] = 'a'
-        # companyitem["url"] = "b"
-        # companyitem["natural"] = "c"
-        # companyitem["scale"] = "d"
-        # companyitem["address"] = "e"
-        # com = db_agent.add(
-        #     orm_model=Company,
-        #     kwargs=dict(companyItem)
-        # )
-        jobitem["com_id"] = "1"
+        companyitem["url"] = response.xpath(
+            '//a[@onclick="recordOutboundLink(this, \'terminalpage\', \'tocompanylink3\');"]/@href').extract()[0]
+        companyitem["com_name"] = response.xpath('//div[@class="inner-left fl"]/h2/a/text()').extract()[0]
+        company_information = response.xpath(
+            '//ul[@class="terminal-ul clearfix terminal-company mt20"]/li/strong/text()').extract()
+        companyitem["scale"] = company_information[0]
+        companyitem["natural"] = company_information[1]
+        companyitem["address"] = company_information[2].strip()
+        com = db_agent.get(
+            filter_kwargs=companyitem,
+            orm_model=Company
+        )
+        if not com:
+            com = db_agent.add(
+                orm_model=Company,
+                kwargs=dict(companyitem)
+            )
+        jobitem["com_id"] = com.id
 
         yield jobitem

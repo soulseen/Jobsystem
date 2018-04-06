@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from .base import Base
-from sqlalchemy import Column, String, Integer,ForeignKey
+from sqlalchemy import Column, String, Integer,ForeignKey,Text
 
 
 class Python(Base):
@@ -17,5 +17,6 @@ class Python(Base):
     education = Column(String(255))
     time = Column(String(255))
     city = Column(String(255))
+    description = Column(Text(65535))
     com_id = Column(Integer,ForeignKey('company.id'))
 
