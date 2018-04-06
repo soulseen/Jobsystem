@@ -7,19 +7,17 @@
 
 
 from .dbtools import DatabaseAgent
-from .models.job import Job
+from .models.python import Python
+
 
 class JobPipeline(object):
-
     def __init__(self):
         self.db_agent = DatabaseAgent()
 
     def process_item(self, item, spider):
-        # db = self.db_agent.add(
-        #     kwargs=dict(item),
-        #     orm_model=Job
-        # )
+        self.db_agent.add(
+            kwargs=dict(item),
+            orm_model=Python
+        )
+        print('-------')
         return item
-
-
-
