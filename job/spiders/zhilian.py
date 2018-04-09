@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from job.items import JobItem, CompanyItem
-from job.dbtools import DatabaseAgent
-from job.models.company import Company
-from job.common import CommonFun
-import scrapy
 import re
+
+import scrapy
+
+from common.common import CommonFun
+from common.dbtools import DatabaseAgent
+from job.items import JobItem, CompanyItem
+from job.models.company import Company
 
 
 class test(scrapy.Spider):
@@ -79,10 +81,8 @@ class test(scrapy.Spider):
         companyitem["scale"] = company_information[0]
         companyitem["natural"] = company_information[1]
         companyitem["address"] = company_information[2].strip()
-        com = db_agent.get(
-            filter_kwargs=companyitem,
-            orm_model=Company
-        )
+        self.get = db_agent.get(filter_kwargs=companyitem, orm_model=Company)
+        com = self.get
         if not com:
             com = db_agent.add(
                 orm_model=Company,

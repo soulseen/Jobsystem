@@ -4,13 +4,7 @@ from sqlalchemy import create_engine
 from contextlib import contextmanager
 from sqlalchemy.orm import sessionmaker
 from job.models.base import Base
-
-
-MYSQL_HOST = '127.0.0.1'
-MYSQL_DBNAME = 'db'
-MYSQL_USER = 'root'
-MYSQL_PASSWD = '123456'
-MYSQL_PORT = 3306
+from common.common import MYSQL_USER, MYSQL_HOST, MYSQL_PORT, MYSQL_DBNAME, MYSQL_PASSWD
 
 DATABASE_URL = "mysql+pymysql://{}:{}@{}:{}/{}".format(MYSQL_USER,
                                                        MYSQL_PASSWD,
@@ -19,8 +13,8 @@ DATABASE_URL = "mysql+pymysql://{}:{}@{}:{}/{}".format(MYSQL_USER,
                                                        MYSQL_DBNAME
                                                        )
 engine = create_engine(DATABASE_URL,
-                    encoding = "utf8",
-                    connect_args = {'charset': 'utf8'})
+                       encoding="utf8",
+                       connect_args={'charset': 'utf8'})
 
 
 @contextmanager
@@ -51,7 +45,6 @@ def orm_session_control(orm_func):
 class DatabaseAgent():
     """封装SQLAlchemy的逻辑做一些db CRUD的工作"""
 
-
     orm_model = None
 
     @orm_session_control
@@ -63,11 +56,20 @@ class DatabaseAgent():
             return query_result.all()
 
     @orm_session_control
-    def add(self, kwargs,orm_model=None, session=None):
+    def add(self, kwargs, orm_model=None, session=None):
         new_orm = orm_model(**kwargs)
         session.add(new_orm)
         session.commit()
         return new_orm
+
+    @orm_session_control
+    def update(self, filter_kwargs, method_kwargs,
+               need_commit=True, orm_model=None, session=None):
+        orm_model = orm_model if orm_model is not None else self.orm_model
+        session.query(orm_model).filter_by(**filter_kwargs).update(method_kwargs)
+        if need_commit:
+            session.commit()
+
 
 def create_db():
     engine = create_engine(DATABASE_URL)
