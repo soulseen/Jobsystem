@@ -11,13 +11,13 @@ from job.models.company import Company
 
 
 class test(scrapy.Spider):
-    name = 'zhilian_python'
+    name = 'zhilian_python_shenzhen'
     zhilian = "http://sou.zhaopin.com/jobs/searchresult.ashx?jl={city}&kw={name}&sm=0&sg=897d9246117644c0b19afbf08e729ca7&p={page}"
     header = {"User-Agent": 'Mozilla/5.0 (X11; Linux x86_64) AppleWe'
                             'bKit/537.36(KHTML, like Gecko) Chrome/6'
                             '3.0.3239.132 Safari/537.36'}
     data = {
-        "city": "上海",
+        "city": "深圳",
         "name": "python工程师"
     }
 
