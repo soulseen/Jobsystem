@@ -4,4 +4,4 @@ export.*
 docker-compose.yml
 export/*
 .idea/*
-
+*~
