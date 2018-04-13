@@ -3,5 +3,5 @@ __pycache__\
 export.*
 docker-compose.yml
 export/*
-.idea/*
+
 
