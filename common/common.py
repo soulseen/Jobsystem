@@ -2,6 +2,8 @@
 
 
 from flask import jsonify
+from .dbtools import DatabaseAgent
+import jieba
 
 
 MSG_MAP = {
@@ -54,3 +56,34 @@ def clear(data):
         ' ', '').replace('"', '').replace('\'', '').replace('“', '').replace('”', '').replace('；', '').replace('(',
                                                                                                                '').replace(
         ')', '')
+
+def parse_word(description,word_model):
+    db_agent = DatabaseAgent()
+    seg_list = jieba.cut(description)
+    for x in seg_list:
+        if x == " ":
+            continue
+        exists = db_agent.get(
+            filter_kwargs={
+                "word": str(x)
+            },
+            orm_model=word_model
+        )
+        if exists:
+            db_agent.update(
+                filter_kwargs={
+                    "word": str(x)
+                },
+                method_kwargs={
+                    "count": 1 + exists.count
+                },
+                orm_model=word_model
+            )
+        else:
+            db_agent.add(
+                kwargs={
+                    "word": str(x),
+                    "count": 1
+                },
+                orm_model=word_model
+            )

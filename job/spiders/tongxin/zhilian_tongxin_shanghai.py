@@ -3,9 +3,8 @@
 import re
 
 import scrapy
-import jieba
 
-from common.common import clear
+from common.common import clear, parse_word
 from common.dbtools import DatabaseAgent
 from job.items import JobItem, CompanyItem
 from job.models.tongxin import Tongxin
@@ -49,6 +48,12 @@ class test(scrapy.Spider):
     def get_url(self, response):
         job_urls = response.xpath('//a[@par]/@href').extract()
         for job_url in job_urls:
+            job = self.db_agent.get(
+                filter_kwargs={"url": job_url},
+                orm_model=self.job_model
+            )
+            if job:
+                continue
             yield scrapy.Request(
                 url=job_url,
                 headers=self.header,
@@ -100,45 +105,11 @@ class test(scrapy.Spider):
                 kwargs=dict(companyitem)
             )
         jobitem["com_id"] = com.id
-        job = self.db_agent.get(
-            filter_kwargs={"url":jobitem.get("url",None)},
+
+        self.db_agent.add(
+            kwargs=dict(jobitem),
             orm_model=self.job_model
         )
-        if not job:
-            self.db_agent.add(
-                kwargs=dict(jobitem),
-                orm_model=self.job_model
-            )
-            self.parse_word(jobitem["description"])
+        parse_word(jobitem["description"],self.word_model)
 
         yield jobitem
-
-    def parse_word(self,description):
-        seg_list = jieba.cut(description)
-        for x in seg_list:
-            if x == " ":
-                continue
-            exists = self.db_agent.get(
-                filter_kwargs={
-                    "word": str(x)
-                },
-                orm_model=self.word_model
-            )
-            if exists:
-                self.db_agent.update(
-                    filter_kwargs={
-                        "word": str(x)
-                    },
-                    method_kwargs={
-                        "count": 1 + exists.count
-                    },
-                    orm_model=self.word_model
-                )
-            else:
-                self.db_agent.add(
-                    kwargs={
-                        "word": str(x),
-                        "count": 1
-                    },
-                    orm_model=self.word_model
-                )
