@@ -1,11 +1,17 @@
-# -*- coding: utf-8 -*-
+# __coding:utf-8__
+'''
+@Author  : Sun
+@Time    :  下午11:02
+@Software: PyCharm
+@File    : tongxin.py
+'''
 
 from .base import Base
 from sqlalchemy import Column, String, Integer,ForeignKey,Text
 
 
-class Python(Base):
-    __tablename__ = "python"
+class Tongxin(Base):
+    __tablename__ = "tongxin"
 
     id = Column(Integer, autoincrement=True, primary_key=True)
     jobname = Column(String(255), nullable=False)
@@ -18,5 +24,4 @@ class Python(Base):
     time = Column(String(255))
     city = Column(String(255))
     description = Column(Text(65535))
-    com_id = Column(Integer,ForeignKey('python_company.id'))
-
+    com_id = Column(Integer,ForeignKey('tongxin_company.id'))

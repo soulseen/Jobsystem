@@ -4,21 +4,21 @@ import re
 
 import scrapy
 
-from common.common import CommonFun
+from common.common import clear
 from common.dbtools import DatabaseAgent
 from job.items import JobItem, CompanyItem
-from job.models.company import Company
+from job.models.python_company import PythonCompany
 
 
 class test(scrapy.Spider):
-    name = 'zhilian_python_hangzhou'
+    name = 'zhilian_tongxin_shenzhen'
     zhilian = "http://sou.zhaopin.com/jobs/searchresult.ashx?jl={city}&kw={name}&sm=0&sg=897d9246117644c0b19afbf08e729ca7&p={page}"
     header = {"User-Agent": 'Mozilla/5.0 (X11; Linux x86_64) AppleWe'
                             'bKit/537.36(KHTML, like Gecko) Chrome/6'
                             '3.0.3239.132 Safari/537.36'}
     data = {
-        "city": "杭州",
-        "name": "python工程师"
+        "city": "深圳",
+        "name": "通信工程师"
     }
 
     def start_requests(self):
@@ -71,7 +71,7 @@ class test(scrapy.Spider):
         description = ''
         for des in des_lis:
             description = description + des
-        jobitem["description"] = CommonFun.clear(description)
+        jobitem["description"] = clear(description)
 
         companyitem["url"] = response.xpath(
             '//a[@onclick="recordOutboundLink(this, \'terminalpage\', \'tocompanylink3\');"]/@href').extract()[0]
@@ -81,11 +81,11 @@ class test(scrapy.Spider):
         companyitem["scale"] = company_information[0]
         companyitem["natural"] = company_information[1]
         companyitem["address"] = company_information[2].strip()
-        self.get = db_agent.get(filter_kwargs=companyitem, orm_model=Company)
+        self.get = db_agent.get(filter_kwargs=companyitem, orm_model=PythonCompany)
         com = self.get
         if not com:
             com = db_agent.add(
-                orm_model=Company,
+                orm_model=PythonCompany,
                 kwargs=dict(companyitem)
             )
         jobitem["com_id"] = com.id

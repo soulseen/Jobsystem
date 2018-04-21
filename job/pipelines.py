@@ -7,8 +7,6 @@
 
 
 from common.dbtools import DatabaseAgent
-from .models.python import Python
-from .models.job_python import PythonWord
 import jieba
 
 
@@ -16,7 +14,7 @@ class JobPipeline(object):
     def __init__(self):
         self.db_agent = DatabaseAgent()
 
-    def process_item(self, item, spider):
+    def process_item(self, item, spider, model):
         seg_list = jieba.cut(item["description"])
         for x in seg_list:
             if x==" ":
@@ -25,7 +23,7 @@ class JobPipeline(object):
                 filter_kwargs={
                     "word":str(x)
                 },
-                orm_model=PythonWord
+                orm_model=model
             )
             if exists:
                 self.db_agent.update(
@@ -35,7 +33,7 @@ class JobPipeline(object):
                     method_kwargs={
                         "count":1+exists.count
                     },
-                    orm_model=PythonWord
+                    orm_model=model
                 )
             else:
                 self.db_agent.add(
@@ -43,12 +41,8 @@ class JobPipeline(object):
                         "word": str(x),
                         "count":1
                     },
-                    orm_model=PythonWord
+                    orm_model=model
                 )
 
-        self.db_agent.add(
-            kwargs=dict(item),
-            orm_model=Python
-        )
 
         return item

@@ -1,11 +1,18 @@
-# -*- coding: utf-8 -*-
+# __coding:utf-8__
+'''
+@Author  : Sun
+@Time    :  下午11:02
+@Software: PyCharm
+@File    : tongxin_company.py
+'''
+
 
 from .base import Base
-from sqlalchemy import Column, String, Integer,ForeignKey
+from sqlalchemy import Column, String, Integer
 from sqlalchemy.orm import relationship
 
-class Company(Base):
-    __tablename__ = "company"
+class TongxinCompany(Base):
+    __tablename__ = "tongxin_company"
 
     id = Column(Integer, autoincrement=True, primary_key=True)
     com_name = Column(String(255),nullable=False)
@@ -14,7 +21,7 @@ class Company(Base):
     scale = Column(String(45))
     address = Column(String(255))
     python = relationship(
-        'Python',
-        primaryjoin="Company.id==Python.com_id",
-        backref='company'
+        'Tongxin',
+        primaryjoin="TongxinCompany.id==Tongxin.com_id",
+        backref='tongxin_company'
     )

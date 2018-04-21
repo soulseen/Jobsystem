@@ -48,8 +48,15 @@ class DatabaseAgent():
     orm_model = None
 
     @orm_session_control
-    def get(self, filter_kwargs, just_first=True, orm_model=None, session=None):
-        query_result = session.query(orm_model).filter_by(**filter_kwargs)
+    def get(self, filter_kwargs={}, just_first=True, orm_model=None, session=None, count=False, all=False):
+        if all:
+            query_result = len(session.query(orm_model).all())
+            return query_result
+        if count:
+            query_result = len(session.query(orm_model).filter_by(**filter_kwargs))
+            return query_result
+        else:
+            query_result = session.query(orm_model).filter_by(**filter_kwargs)
         if just_first:
             return query_result.first()
         else:
