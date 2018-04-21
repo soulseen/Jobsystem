@@ -14,35 +14,6 @@ class JobPipeline(object):
     def __init__(self):
         self.db_agent = DatabaseAgent()
 
-    def process_item(self, item, spider, model):
-        seg_list = jieba.cut(item["description"])
-        for x in seg_list:
-            if x==" ":
-                continue
-            exists = self.db_agent.get(
-                filter_kwargs={
-                    "word":str(x)
-                },
-                orm_model=model
-            )
-            if exists:
-                self.db_agent.update(
-                    filter_kwargs={
-                        "word": str(x)
-                    },
-                    method_kwargs={
-                        "count":1+exists.count
-                    },
-                    orm_model=model
-                )
-            else:
-                self.db_agent.add(
-                    kwargs={
-                        "word": str(x),
-                        "count":1
-                    },
-                    orm_model=model
-                )
-
+    def process_item(self, item, spider):
 
         return item

@@ -3,6 +3,7 @@
 import re
 
 import scrapy
+import jieba
 
 from common.common import clear
 from common.dbtools import DatabaseAgent
@@ -25,6 +26,7 @@ class test(scrapy.Spider):
     com_model = TongxinCompany
     job_model = Tongxin
     word_model = TongxinWord
+    db_agent = DatabaseAgent()
 
     def start_requests(self):
         yield scrapy.Request(
@@ -54,7 +56,6 @@ class test(scrapy.Spider):
             )
 
     def parse(self, response):
-        db_agent = DatabaseAgent()
         jobitem = JobItem()
         companyitem = CompanyItem()
         jobitem["city"] = self.data.get("city")
@@ -70,7 +71,10 @@ class test(scrapy.Spider):
         jobitem["natural"] = job_information[num + 1]
         jobitem["exp"] = job_information[num + 2]
         jobitem["education"] = job_information[num + 3]
-        jobitem["time"] = response.xpath('//div[@class="terminalpage-left"]/ul/li/strong/span/text()').extract()[0]
+        try:
+            jobitem["time"] = response.xpath('//div[@class="terminalpage-left"]/ul/li/strong/span/text()').extract()[0]
+        except:
+            jobitem["time"] = response.xpath('//div[@class="terminalpage-left"]/ul/li/strong/text()').extract()[0]
         des_lis = response.xpath(
             '//div[@class="tab-cont-box"][1]/div[@class="tab-inner-cont"]/p/text()').extract()
         description = ''
@@ -86,19 +90,55 @@ class test(scrapy.Spider):
         companyitem["scale"] = company_information[0]
         companyitem["natural"] = company_information[1]
         companyitem["address"] = company_information[2].strip()
-        com = db_agent.get(
+        com = self.db_agent.get(
             filter_kwargs=companyitem,
             orm_model=self.com_model
         )
         if not com:
-            com = db_agent.add(
+            com = self.db_agent.add(
                 orm_model=self.com_model,
                 kwargs=dict(companyitem)
             )
         jobitem["com_id"] = com.id
-        db_agent.add(
-            kwargs=dict(jobitem),
+        job = self.db_agent.get(
+            filter_kwargs={"url":jobitem.get("url",None)},
             orm_model=self.job_model
         )
+        if not job:
+            self.db_agent.add(
+                kwargs=dict(jobitem),
+                orm_model=self.job_model
+            )
+            self.parse_word(jobitem["description"])
 
-        yield jobitem, self.word_model
+        yield jobitem
+
+    def parse_word(self,description):
+        seg_list = jieba.cut(description)
+        for x in seg_list:
+            if x == " ":
+                continue
+            exists = self.db_agent.get(
+                filter_kwargs={
+                    "word": str(x)
+                },
+                orm_model=self.word_model
+            )
+            if exists:
+                self.db_agent.update(
+                    filter_kwargs={
+                        "word": str(x)
+                    },
+                    method_kwargs={
+                        "count": 1 + exists.count
+                    },
+                    orm_model=self.word_model
+                )
+            else:
+                self.db_agent.add(
+                    kwargs={
+                        "word": str(x),
+                        "count": 1
+                    },
+                    orm_model=self.word_model
+                )
