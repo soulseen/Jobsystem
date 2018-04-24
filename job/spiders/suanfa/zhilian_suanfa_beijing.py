@@ -13,7 +13,7 @@ from job.models.word_suanfa import SuanfaWord
 
 
 class test(scrapy.Spider):
-    name = 'zhilian_python_beijing'
+    name = 'zhilian_suanfa_beijing'
     zhilian = "http://sou.zhaopin.com/jobs/searchresult.ashx?jl={city}&kw={name}&sm=0&sg=897d9246117644c0b19afbf08e729ca7&p={page}"
     header = {"User-Agent": 'Mozilla/5.0 (X11; Linux x86_64) AppleWe'
                             'bKit/537.36(KHTML, like Gecko) Chrome/6'

@@ -4,7 +4,13 @@ from sqlalchemy import create_engine
 from contextlib import contextmanager
 from sqlalchemy.orm import sessionmaker
 from job.models.base import Base
-from .common import MYSQL_USER, MYSQL_HOST, MYSQL_PORT, MYSQL_DBNAME, MYSQL_PASSWD
+# from .common import MYSQL_USER, MYSQL_HOST, MYSQL_PORT, MYSQL_DBNAME, MYSQL_PASSWD
+
+MYSQL_HOST = '127.0.0.1'
+MYSQL_DBNAME = 'db'
+MYSQL_USER = 'root'
+MYSQL_PASSWD = '123456'
+MYSQL_PORT = 3306
 
 DATABASE_URL = "mysql+pymysql://{}:{}@{}:{}/{}".format(MYSQL_USER,
                                                        MYSQL_PASSWD,
