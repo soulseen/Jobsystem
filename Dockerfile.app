@@ -10,6 +10,6 @@ EXPOSE 10012 10011
 
 COPY . /home/app/
 
-RUN pip3 install -r requirements.txt
+RUN pip install -r requirements.txt
 
 CMD ["python3", "run.py", "runserver"]
