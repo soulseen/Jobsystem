@@ -6,8 +6,7 @@ WORKDIR /home/app
 
 ENV PYTHONPATH /home/app
 
-EXPOSE 80 8000
-EXPOSE 10011 9001
+EXPOSE 10012 10011
 
 COPY . /home/app/
 
