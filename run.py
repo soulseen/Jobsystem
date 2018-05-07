@@ -15,5 +15,5 @@ def hello():
 
 if __name__ == '__main__':
     manager.add_command("runserver",
-                        Server(host="0.0.0.0", port=10011, threaded=True))
+                        Server(host="127.0.0.1", port=10011, threaded=True))
     manager.run()
