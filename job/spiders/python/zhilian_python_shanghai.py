@@ -7,9 +7,7 @@ import scrapy
 from common.common import clear, parse_word
 from common.dbtools import DatabaseAgent
 from job.items import JobItem, CompanyItem
-from job.models.python import Python
-from job.models.python_company import PythonCompany
-from job.models.word_python import PythonWord
+from job.models.python import Python, PythonWord, PythonCompany
 
 
 class test(scrapy.Spider):

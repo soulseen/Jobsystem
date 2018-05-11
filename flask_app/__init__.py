@@ -11,7 +11,7 @@ from flask import Flask
 def create_app(config_name):
     app = Flask(__name__)
 
-    from flask_app.routes.routes import api
+    from flask_app.routes.index import api
     app.register_blueprint(api, url_prefix='/job')
 
     return app
