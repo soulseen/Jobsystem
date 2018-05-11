@@ -6,11 +6,11 @@ from contextlib import contextmanager
 from sqlalchemy.orm import sessionmaker
 from job.models.base import Base
 
-MYSQL_HOST = os.getenv("MYSQL_HOST", "123.59.45.157")
+MYSQL_HOST = os.getenv("MYSQL_HOST", "127.0.0.1")
 MYSQL_DBNAME = os.getenv("MYSQL_DBNAME", "jobsystem")
 MYSQL_USER = os.getenv("MYSQL_USER", "root")
-MYSQL_PASSWD = os.getenv("MYSQL_PASSWD", "root")
-MYSQL_PORT = os.getenv("MYSQL_PORT", 30039)
+MYSQL_PASSWD = os.getenv("MYSQL_PASSWD", "123456")
+MYSQL_PORT = os.getenv("MYSQL_PORT", 3306)
 
 DATABASE_URL = "mysql+pymysql://{}:{}@{}:{}/{}".format(MYSQL_USER,
                                                        MYSQL_PASSWD,
