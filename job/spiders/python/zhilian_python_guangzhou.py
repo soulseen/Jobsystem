@@ -4,7 +4,7 @@ import re
 
 import scrapy
 
-from common.common import clear,parse_word
+from common.common import clear, parse_word
 from common.dbtools import DatabaseAgent
 from job.items import JobItem, CompanyItem
 from job.models.python import Python, PythonWord, PythonCompany
@@ -108,7 +108,6 @@ class test(scrapy.Spider):
             kwargs=dict(jobitem),
             orm_model=self.job_model
         )
-        parse_word(jobitem["description"],self.word_model)
+        parse_word(jobitem["description"], self.word_model)
 
         yield jobitem
-

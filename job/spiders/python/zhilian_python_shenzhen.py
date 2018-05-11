@@ -109,7 +109,6 @@ class test(scrapy.Spider):
             kwargs=dict(jobitem),
             orm_model=self.job_model
         )
-        parse_word(jobitem["description"],self.word_model)
+        parse_word(jobitem["description"], self.word_model)
 
         yield jobitem
-

@@ -10,23 +10,24 @@ import re
 from common.dbtools import DatabaseAgent, sqlalchemy_session
 from common.common import to_json, Get_Average
 from common.decorators import req_params_inact
-from job.models.python import Python,PythonCompany,PythonWord
-from job.models.suanfa import Suanfa,SuanfaCompany,SuanfaWord
-from job.models.tongxin import Tongxin,TongxinCompany,TongxinWord
+from job.models.python import Python, PythonCompany, PythonWord
+from job.models.suanfa import Suanfa, SuanfaCompany, SuanfaWord
+from job.models.tongxin import Tongxin, TongxinCompany, TongxinWord
 from flask import request, Blueprint
 
 api = Blueprint('api', __name__)
 
 model_map_job = {
     "python": Python,
-    "suanfa":Suanfa,
-    "tongxin":Tongxin
+    "suanfa": Suanfa,
+    "tongxin": Tongxin
 }
 model_map_com = {
-    "python":PythonCompany,
-    "suanfa":SuanfaCompany,
-    "tongxin":TongxinCompany
+    "python": PythonCompany,
+    "suanfa": SuanfaCompany,
+    "tongxin": TongxinCompany
 }
+
 
 def get_money(money):
     if "面议" in money:
@@ -35,11 +36,12 @@ def get_money(money):
         try:
             pattern = re.compile(r'\d+-\d+')
             money = pattern.match(money)
-            money_ave = int(Get_Average(list(map(int,money.group(0).split('-')))))
+            money_ave = int(Get_Average(list(map(int, money.group(0).split('-')))))
             return money_ave
         except:
             print(money)
             return None
+
 
 @api.route("/all", methods=['get'])
 def all():
@@ -48,7 +50,7 @@ def all():
     res["company"] = {}
     res["money_ave"] = {}
     db_agent = DatabaseAgent()
-    for key,job_model in model_map_job.items():
+    for key, job_model in model_map_job.items():
         jobs = db_agent.get(
             orm_model=job_model,
             all=True
@@ -56,9 +58,9 @@ def all():
         money_list = []
         for job in jobs:
             money_list.append(get_money(job.money))
-        res["money_ave"][key] = int(Get_Average(list(filter(None,money_list))))
+        res["money_ave"][key] = int(Get_Average(list(filter(None, money_list))))
         res["job"][key] = len(jobs)
-    for key,com_model in model_map_com.items():
+    for key, com_model in model_map_com.items():
         count = db_agent.get(
             orm_model=com_model,
             all=True
@@ -66,7 +68,8 @@ def all():
         res["company"][key] = len(count)
     return to_json(200, res)
 
-@api.route("/job_money",methods=['post'])
+
+@api.route("/job_money", methods=['post'])
 @req_params_inact(
     params=('jobname',))
 def job_money():
@@ -74,7 +77,7 @@ def job_money():
     res = {}
     db_agent = DatabaseAgent()
     jobs = db_agent.get(
-        orm_model=model_map_job.get(data["jobname"],None),
+        orm_model=model_map_job.get(data["jobname"], None),
         all=True
     )
     res["money_0_5"] = []
