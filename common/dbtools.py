@@ -6,11 +6,11 @@ from contextlib import contextmanager
 from sqlalchemy.orm import sessionmaker
 from job.models.base import Base
 
-MYSQL_HOST = os.getenv("MYSQL_HOST", "127.0.0.1")
+MYSQL_HOST = os.getenv("MYSQL_HOST", "192.168.1.96")
 MYSQL_DBNAME = os.getenv("MYSQL_DBNAME", "jobsystem")
 MYSQL_USER = os.getenv("MYSQL_USER", "root")
-MYSQL_PASSWD = os.getenv("MYSQL_PASSWD", "123456")
-MYSQL_PORT = os.getenv("MYSQL_PORT", 3306)
+MYSQL_PASSWD = os.getenv("MYSQL_PASSWD", "root")
+MYSQL_PORT = os.getenv("MYSQL_PORT", 32639)
 
 DATABASE_URL = "mysql+pymysql://{}:{}@{}:{}/{}".format(MYSQL_USER,
                                                        MYSQL_PASSWD,
@@ -54,14 +54,12 @@ class DatabaseAgent():
     orm_model = None
 
     @orm_session_control
-    def get(self, filter_kwargs={}, just_first=True, orm_model=None, session=None, count=False, all=False):
-        if all:
-            query_result = session.query(orm_model).all()
-            return query_result
+    def get(self, filter_kwargs={}, just_first=True, orm_model=None, session=None):
+        query_result = session.query(orm_model).filter_by(**filter_kwargs)
         if just_first:
-            query_result = session.query(orm_model).first()
-            return query_result
-
+            return query_result.first()
+        else:
+            return query_result.all()
 
     @orm_session_control
     def add(self, kwargs, orm_model=None, session=None):

@@ -21,11 +21,6 @@ MSG_MAP = {
     10001: '文件传输错误'
 }
 
-MYSQL_HOST = '127.0.0.1'
-MYSQL_DBNAME = 'db'
-MYSQL_USER = 'root'
-MYSQL_PASSWD = '123456'
-MYSQL_PORT = 3306
 
 
 # 最大数
@@ -44,7 +39,7 @@ def Get_Range(list):
 
 
 # 中位数
-def get_median(data):
+def Get_Median(data):
     data = sorted(data)
     size = len(data)
     if size % 2 == 0:  # 判断列表长度为偶数
