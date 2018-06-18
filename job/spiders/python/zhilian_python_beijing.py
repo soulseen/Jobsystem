@@ -27,7 +27,7 @@ class test(scrapy.Spider):
 
     def start_requests(self):
         yield scrapy.Request(
-            url=self.zhilian.format(**self.data, page=""),
+            url=self.zhilian.format(**self.data,page=""),
             headers=self.header,
             callback=self.get_page
         )
